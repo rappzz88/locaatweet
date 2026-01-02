@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocaTweet - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+            background: linear-gradient(45deg, #fff, #ddd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Home Page */
+        .home-container {
+            display: none;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: #000;
+            border-bottom: 1px solid #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .feed {
+            padding: 0;
+        }
+
+        .post {
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 15px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #333;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-username {
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .post-username:hover {
+            color: #667eea;
+        }
+
+        .post-time {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .post-content {
+            margin: 10px 0;
+        }
+
+        .post-media {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .post-media video,
+        .post-media img {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .post-action-btn {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .post-action-btn:hover {
+            color: #667eea;
+        }
+
+        .post-action-btn.liked {
+            color: #ff3b5c;
+        }
+
+        .comments-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #222;
+        }
+
+        .comment {
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .comment-username {
+            font-weight: bold;
+            margin-right: 8px;
+            color: #667eea;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: #222;
+            color: #fff;
+        }
+
+        .comment-input button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: #667eea;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background: #111;
+            border-top: 1px solid #333;
+            padding: 20px;
+        }
+
+        .chat-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .chat-message {
+            background: #222;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chat-username {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .chat-text {
+            color: #fff;
+        }
+
+        .chat-time {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .chat-input-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-box input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: #222;
+            color: #fff;
+        }
+
+        .chat-input-box button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            background: #667eea;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chat-input-box button:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <h1>🎵 LocaTweet</h1>
+            <div class="input-group">
+                <input type="text" id="loginUsername" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginPassword" placeholder="Password">
+            </div>
+            <button class="btn btn-primary" onclick="login()">Masuk</button>
+            <button class="btn btn-secondary" onclick="register()">Daftar</button>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="homePage" class="home-container">
+        <div class="header">
+            <h2>LocaTweet</h2>
+            <div class="header-buttons">
+                <button class="header-btn" onclick="goToProfile()">👤 Profile</button>
+                <button class="header-btn" onclick="goToPost()">➕ Post</button>
+            </div>
+        </div>
+
+        <div id="feedContent" class="feed">
+            <div class="loading">Memuatkan...</div>
+        </div>
+
+        <!-- Global Chat Section -->
+        <div class="chat-section">
+            <div class="chat-title">💬 Global Chat</div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-box">
+                <input type="text" id="chatInput" placeholder="Tulis mesej..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button onclick="sendMessage()">Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, push, onValue, update, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiFAzr6TqydA9_51dvM7b_qg9pZPwKlRk",
+            authDomain: "locaatweet.firebaseapp.com",
+            databaseURL: "https://locaatweet-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "locaatweet",
+            storageBucket: "locaatweet.firebasestorage.app",
+            messagingSenderId: "1066790859888",
+            appId: "1:1066790859888:web:256236c3839a426bbb70b5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentUser = null;
+
+        // Auto login
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            showHome();
+        }
+
+        window.login = async function() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                alert('Sila isi username dan password');
+                return;
+            }
+
+            try {
+                const userRef = ref(db, 'users/' + username);
+                const snapshot = await get(userRef);
+
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.password === password) {
+                        currentUser = { username, password, ...userData };
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        showHome();
+                    } else {
+                        alert('Password salah');
+                    }
+                } else {
+                    alert('Username tidak wujud');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Ralat semasa login');
+            }
+        };
+
+        window.register = async function() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                alert('Sila isi username dan password');
+                return;
+            }
+
+            if (username.length < 3) {
+                alert('Username mesti sekurang-kurangnya 3 aksara');
+                return;
+            }
+
+            try {
+                const userRef = ref(db, 'users/' + username);
+                const snapshot = await get(userRef);
+
+                if (snapshot.exists()) {
+                    alert('Username sudah wujud');
+                    return;
+                }
+
+                const newUser = {
+                    password: password,
+                    profilePic: '',
+                    followers: [],
+                    following: []
+                };
+
+                await set(userRef, newUser);
+                currentUser = { username, password, ...newUser };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showHome();
+            } catch (error) {
+                console.error('Register error:', error);
+                alert('Ralat semasa mendaftar');
+            }
+        };
+
+        function showHome() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('homePage').style.display = 'block';
+            loadFeed();
+            loadChat();
+        }
+
+        async function loadFeed() {
+            const feedDiv = document.getElementById('feedContent');
+            feedDiv.innerHTML = '<div class="loading">Memuatkan...</div>';
+
+            const postsRef = ref(db, 'posts');
+            onValue(postsRef, (snapshot) => {
+                feedDiv.innerHTML = '';
+                const posts = [];
+                snapshot.forEach((child) => {
+                    posts.push({ id: child.key, ...child.val() });
+                });
+
+                posts.sort((a, b) => b.timestamp - a.timestamp);
+
+                if (posts.length === 0) {
+                    feedDiv.innerHTML = '<div class="loading">Tiada postingan lagi</div>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const postEl = createPostElement(post);
+                    feedDiv.appendChild(postEl);
+                });
+            });
+        }
+
+        function createPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+
+            const userLiked = post.likes && post.likes.includes(currentUser.username);
+            const likeCount = post.likes ? post.likes.length : 0;
+            const commentCount = post.comments ? post.comments.length : 0;
+
+            const timeDiff = Date.now() - post.timestamp;
+            const hours = Math.floor(timeDiff / 3600000);
+            const timeStr = hours < 1 ? 'Baru sahaja' : hours < 24 ? `${hours}j` : `${Math.floor(hours/24)}h`;
+
+            const defaultAvatar = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23667eea"/><text x="50" y="65" text-anchor="middle" fill="white" font-size="50">👤</text></svg>';
+
+            postDiv.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar">
+                        <img src="${post.profilePic || defaultAvatar}" alt="${post.username}">
+                    </div>
+                    <div class="post-info">
+                        <div class="post-username">@${post.username}</div>
+                        <div class="post-time">${timeStr}</div>
+                    </div>
+                </div>
+                ${post.caption ? `<div class="post-content">${post.caption}</div>` : ''}
+                <div class="post-media">
+                    ${post.mediaType === 'video' 
+                        ? `<video src="${post.mediaData}" controls></video>`
+                        : `<img src="${post.mediaData}" alt="Post">`
+                    }
+                </div>
+                <div class="post-actions">
+                    <button class="post-action-btn ${userLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+                        ❤️ ${likeCount}
+                    </button>
+                    <button class="post-action-btn" onclick="toggleComments('${post.id}')">
+                        💬 ${commentCount}
+                    </button>
+                </div>
+                <div class="comments-section hidden" id="comments-${post.id}">
+                    <div id="comment-list-${post.id}">
+                        ${post.comments ? post.comments.map(c => `
+                            <div class="comment">
+                                <span class="comment-username">@${c.username}</span>
+                                ${c.text}
+                            </div>
+                        `).join('') : ''}
+                    </div>
+                    <div class="comment-input">
+                        <input type="text" id="comment-input-${post.id}" placeholder="Tulis komen...">
+                        <button onclick="addComment('${post.id}')">Kirim</button>
+                    </div>
+                </div>
+            `;
+
+            return postDiv;
+        }
+
+        window.toggleLike = async function(postId) {
+            const postRef = ref(db, 'posts/' + postId);
+            const snapshot = await get(postRef);
+            const post = snapshot.val();
+
+            let likes = post.likes || [];
+            const index = likes.indexOf(currentUser.username);
+
+            if (index > -1) {
+                likes.splice(index, 1);
+            } else {
+                likes.push(currentUser.username);
+            }
+
+            await update(postRef, { likes });
+        };
+
+        window.toggleComments = function(postId) {
+            const commentsDiv = document.getElementById(`comments-${postId}`);
+            commentsDiv.classList.toggle('hidden');
+        };
+
+        window.addComment = async function(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const postRef = ref(db, 'posts/' + postId);
+            const snapshot = await get(postRef);
+            const post = snapshot.val();
+
+            const comments = post.comments || [];
+            comments.push({
+                username: currentUser.username,
+                text: text,
+                timestamp: Date.now()
+            });
+
+            await update(postRef, { comments });
+            input.value = '';
+        };
+
+        // Global Chat
+        function loadChat() {
+            const chatRef = ref(db, 'globalChat');
+            onValue(chatRef, (snapshot) => {
+                const messagesDiv = document.getElementById('chatMessages');
+                messagesDiv.innerHTML = '';
+                
+                const messages = [];
+                snapshot.forEach((child) => {
+                    messages.push(child.val());
+                });
+
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+                messages.slice(-50).forEach(msg => {
+                    const messageEl = document.createElement('div');
+                    messageEl.className = 'chat-message';
+                    
+                    const timeDiff = Date.now() - msg.timestamp;
+                    const minutes = Math.floor(timeDiff / 60000);
+                    const timeStr = minutes < 1 ? 'baru sahaja' : minutes < 60 ? `${minutes}m` : `${Math.floor(minutes/60)}j`;
+                    
+                    messageEl.innerHTML = `
+                        <div class="chat-username">@${msg.username}</div>
+                        <div class="chat-text">${msg.text}</div>
+                        <div class="chat-time">${timeStr}</div>
+                    `;
+                    messagesDiv.appendChild(messageEl);
+                });
+
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            });
+        }
+
+        window.sendMessage = async function() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const chatRef = ref(db, 'globalChat');
+            await push(chatRef, {
+                username: currentUser.username,
+                text: text,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+        };
+
+        window.goToProfile = function() {
+            window.location.href = 'profile.html';
+        };
+
+        window.goToPost = function() {
+            window.location.href = 'post.html';
+        };
+    </script>
+</body>
+</html>
