@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocaTweet - Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: #000;
+            border-bottom: 1px solid #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #444;
+        }
+
+        .profile-container {
+            padding: 30px 20px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #333;
+            overflow: hidden;
+            border: 4px solid #667eea;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-pic-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #667eea;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .change-pic-btn:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .profile-username {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #111;
+            border-radius: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .edit-section {
+            background: #111;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #2a2a2a;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .accounts-section {
+            background: #111;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .account-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #222;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .account-name {
+            font-weight: bold;
+        }
+
+        .current-badge {
+            background: #667eea;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .switch-btn {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #667eea;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .success-message {
+            background: #28a745;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: #dc3545;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Profile</h2>
+            <button class="back-btn" onclick="goBack()">← Kembali</button>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-pic-container">
+                    <div class="profile-pic">
+                        <img id="profilePic" src="" alt="Profile">
+                    </div>
+                    <button class="change-pic-btn" onclick="document.getElementById('profilePicInput').click()">📷</button>
+                    <input type="file" id="profilePicInput" class="file-input" accept="image/*" onchange="updateProfilePic()">
+                </div>
+                <div class="profile-username" id="profileUsername">@username</div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat">
+                    <div class="stat-number" id="postsCount">0</div>
+                    <div class="stat-label">Postingan</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="followersCount">0</div>
+                    <div class="stat-label">Pengikut</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="followingCount">0</div>
+                    <div class="stat-label">Mengikuti</div>
+                </div>
+            </div>
+
+            <div id="successMessage" class="success-message"></div>
+            <div id="errorMessage" class="error-message"></div>
+
+            <div class="edit-section">
+                <div class="section-title">Edit Profile</div>
+                <div class="input-group">
+                    <label>Username Baru</label>
+                    <input type="text" id="newUsername" placeholder="Masukkan username baru">
+                </div>
+                <div class="input-group">
+                    <label>Password Baru</label>
+                    <input type="password" id="newPassword" placeholder="Masukkan password baru">
+                </div>
+                <button class="btn btn-primary" onclick="saveProfile()">💾 Simpan Perubahan</button>
+            </div>
+
+            <div class="accounts-section">
+                <div class="section-title">Akaun Tersimpan (Max 3)</div>
+                <div id="accountsList"></div>
+            </div>
+
+            <button class="btn btn-danger" onclick="logout()">🚪 Log Keluar</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, get, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiFAzr6TqydA9_51dvM7b_qg9pZPwKlRk",
+            authDomain: "locaatweet.firebaseapp.com",
+            databaseURL: "https://locaatweet-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "locaatweet",
+            storageBucket: "locaatweet.firebasestorage.app",
+            messagingSenderId: "1066790859888",
+            appId: "1:1066790859888:web:256236c3839a426bbb70b5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+
+        const defaultAvatar = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23667eea"/><text x="50" y="65" text-anchor="middle" fill="white" font-size="50">👤</text></svg>';
+
+        async function loadProfile() {
+            document.getElementById('profileUsername').textContent = '@' + currentUser.username;
+            document.getElementById('profilePic').src = currentUser.profilePic || defaultAvatar;
+
+            try {
+                const userRef = ref(db, 'users/' + currentUser.username);
+                const snapshot = await get(userRef);
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    currentUser = { ...currentUser, ...userData };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                    document.getElementById('profilePic').src = currentUser.profilePic || defaultAvatar;
+                    document.getElementById('followersCount').textContent = (userData.followers || []).length;
+                    document.getElementById('followingCount').textContent = (userData.following || []).length;
+                }
+
+                // Count posts
+                const postsRef = ref(db, 'posts');
+                const postsSnapshot = await get(postsRef);
+                let postCount = 0;
+                postsSnapshot.forEach((child) => {
+                    if (child.val().username === currentUser.username) {
+                        postCount++;
+                    }
+                });
+                document.getElementById('postsCount').textContent = postCount;
+            } catch (error) {
+                console.error('Load profile error:', error);
+            }
+
+            loadAccounts();
+        }
+
+        function loadAccounts() {
+            const accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
+            const accountsList = document.getElementById('accountsList');
+            accountsList.innerHTML = '';
+
+            if (accounts.length === 0) {
+                accountsList.innerHTML = '<div style="color:#888;text-align:center;padding:20px;">Tiada akaun tersimpan</div>';
+                return;
+            }
+
+            accounts.forEach((acc, index) => {
+                const accountDiv = document.createElement('div');
+                accountDiv.className = 'account-item';
+                
+                const isCurrent = acc.username === currentUser.username;
+                
+                accountDiv.innerHTML = `
+                    <div>
+                        <div class="account-name">@${acc.username}</div>
+                    </div>
+                    ${isCurrent 
+                        ? '<span class="current-badge">Aktif</span>' 
+                        : `<button class="switch-btn" onclick="switchAccount('${acc.username}', '${acc.password}')">Tukar</button>`
+                    }
+                `;
+                accountsList.appendChild(accountDiv);
+            });
+        }
+
+        window.updateProfilePic = async function() {
+            const file = document.getElementById('profilePicInput').files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const userRef = ref(db, 'users/' + currentUser.username);
+                    await update(userRef, { profilePic: e.target.result });
+                    
+                    currentUser.profilePic = e.target.result;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    document.getElementById('profilePic').src = e.target.result;
+                    showSuccess('Foto profile berjaya dikemaskini!');
+                } catch (error) {
+                    console.error('Update profile pic error:', error);
+                    showError('Ralat semasa mengemas kini foto');
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveProfile = async function() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+
+            if (!newUsername && !newPassword) {
+                showError('Sila isi username atau password baru');
+                return;
+            }
+
+            try {
+                const updates = {};
+                
+                if (newPassword) {
+                    updates.password = newPassword;
+                    currentUser.password = newPassword;
+                    
+                    // Update saved account
+                    let accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
+                    accounts = accounts.map(acc => {
+                        if (acc.username === currentUser.username) {
+                            return { ...acc, password: newPassword };
+                        }
+                        return acc;
+                    });
+                    localStorage.setItem('accounts', JSON.stringify(accounts));
+                }
+
+                if (newUsername && newUsername !== currentUser.username) {
+                    showError('Penukaran username belum disokong');
+                    return;
+                }
+
+                if (Object.keys(updates).length > 0) {
+                    const userRef = ref(db, 'users/' + currentUser.username);
+                    await update(userRef, updates);
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    showSuccess('Profile berjaya dikemaskini!');
+                    document.getElementById('newUsername').value = '';
+                    document.getElementById('newPassword').value = '';
+                }
+            } catch (error) {
+                console.error('Save profile error:', error);
+                showError('Ralat semasa menyimpan');
+            }
+        };
+
+        window.switchAccount = async function(username, password) {
+            try {
+                const userRef = ref(db, 'users/' + username);
+                const snapshot = await get(userRef);
+
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.password === password) {
+                        currentUser = { username, password, ...userData };
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        
+                        // Move to front of accounts list
+                        let accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
+                        accounts = accounts.filter(acc => acc.username !== username);
+                        accounts.unshift({ username, password });
+                        localStorage.setItem('accounts', JSON.stringify(accounts));
+                        
+                        window.location.reload();
+                    }
+                }
+            } catch (error) {
+                console.error('Switch account error:', error);
+                showError('Ralat semasa menukar akaun');
+            }
+        };
+
+        window.logout = function() {
+            if (confirm('Adakah anda pasti mahu log keluar?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        };
+
+        window.goBack = function() {
+            window.location.href = 'index.html';
+        };
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Save account to list
+        function saveAccountToList(username, password) {
+            let accounts = JSON.parse(localStorage.getItem('accounts') || '[]');
+            accounts = accounts.filter(acc => acc.username !== username);
+            accounts.unshift({ username, password });
+            if (accounts.length > 3) {
+                accounts = accounts.slice(0, 3);
+            }
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+        }
+
+        // Initial load
+        loadProfile();
+    </script>
+</body>
+</html>
