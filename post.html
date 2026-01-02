@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocaTweet - Buat Postingan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            min-height: 100vh;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background: #000;
+            border-bottom: 1px solid #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #444;
+        }
+
+        .post-container {
+            padding: 30px 20px;
+        }
+
+        .upload-section {
+            background: #111;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 30px;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-area:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: #764ba2;
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-section {
+            display: none;
+            margin-bottom: 25px;
+        }
+
+        .preview-container {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            max-height: 500px;
+            background: #000;
+        }
+
+        .preview-container img,
+        .preview-container video {
+            width: 100%;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .remove-file-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(220, 53, 69, 0.9);
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .remove-file-btn:hover {
+            background: #dc3545;
+            transform: scale(1.1);
+        }
+
+        .file-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #222;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .file-info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .file-info-label {
+            color: #888;
+        }
+
+        .file-info-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .caption-section {
+            background: #111;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #2a2a2a;
+        }
+
+        .char-count {
+            text-align: right;
+            color: #888;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #333;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #333;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        .success-message {
+            background: #28a745;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: #dc3545;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .tips-section {
+            background: #111;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .tip-icon {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .tip-text {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Buat Postingan</h2>
+            <button class="back-btn" onclick="goBack()">← Kembali</button>
+        </div>
+
+        <div class="post-container">
+            <div id="successMessage" class="success-message"></div>
+            <div id="errorMessage" class="error-message"></div>
+
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Klik untuk pilih fail</div>
+                    <div class="upload-hint">atau seret fail ke sini</div>
+                    <div class="upload-hint" style="margin-top:10px;">Gambar atau Video</div>
+                </div>
+                <input type="file" id="fileInput" class="file-input" accept="image/*,video/*" onchange="handleFile(this.files[0])">
+
+                <div id="previewSection" class="preview-section">
+                    <div class="preview-container">
+                        <div id="previewContent"></div>
+                        <button class="remove-file-btn" onclick="removeFile()">✕</button>
+                    </div>
+                    <div class="file-info" id="fileInfo"></div>
+                </div>
+            </div>
+
+            <div class="caption-section">
+                <div class="section-title">Caption</div>
+                <textarea id="captionText" placeholder="Tulis sesuatu tentang postingan anda..." maxlength="500" oninput="updateCharCount()"></textarea>
+                <div class="char-count"><span id="charCount">0</span>/500</div>
+            </div>
+
+            <div class="tips-section">
+                <div class="section-title">💡 Tips</div>
+                <div class="tip-item">
+                    <div class="tip-icon">✨</div>
+                    <div class="tip-text">Gunakan gambar atau video berkualiti tinggi</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">📝</div>
+                    <div class="tip-text">Tulis caption yang menarik untuk dapatkan lebih interaksi</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-icon">⚡</div>
+                    <div class="tip-text">Video akan disimpan sebagai base64, pastikan saiz tidak terlalu besar</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="postBtn" onclick="uploadPost()" disabled>
+                🚀 Posting Sekarang
+            </button>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Sedang memuat naik...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiFAzr6TqydA9_51dvM7b_qg9pZPwKlRk",
+            authDomain: "locaatweet.firebaseapp.com",
+            databaseURL: "https://locaatweet-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "locaatweet",
+            storageBucket: "locaatweet.firebasestorage.app",
+            messagingSenderId: "1066790859888",
+            appId: "1:1066790859888:web:256236c3839a426bbb70b5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        let selectedFile = null;
+        let fileDataUrl = null;
+
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+
+        // Drag and drop
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+                handleFile(file);
+            }
+        });
+
+        window.handleFile = function(file) {
+            if (!file) return;
+
+            selectedFile = file;
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                fileDataUrl = e.target.result;
+                showPreview(file, fileDataUrl);
+                document.getElementById('postBtn').disabled = false;
+            };
+
+            reader.readAsDataURL(file);
+        };
+
+        function showPreview(file, dataUrl) {
+            const previewSection = document.getElementById('previewSection');
+            const previewContent = document.getElementById('previewContent');
+            const fileInfo = document.getElementById('fileInfo');
+
+            const isVideo = file.type.startsWith('video/');
+            
+            previewContent.innerHTML = isVideo 
+                ? `<video src="${dataUrl}" controls></video>`
+                : `<img src="${dataUrl}" alt="Preview">`;
+
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+            fileInfo.innerHTML = `
+                <div class="file-info-item">
+                    <span class="file-info-label">Jenis:</span>
+                    <span class="file-info-value">${isVideo ? '🎥 Video' : '🖼️ Gambar'}</span>
+                </div>
+                <div class="file-info-item">
+                    <span class="file-info-label">Nama:</span>
+                    <span class="file-info-value">${file.name}</span>
+                </div>
+                <div class="file-info-item">
+                    <span class="file-info-label">Saiz:</span>
+                    <span class="file-info-value">${fileSize} MB</span>
+                </div>
+            `;
+
+            previewSection.style.display = 'block';
+            document.getElementById('uploadArea').style.display = 'none';
+        }
+
+        window.removeFile = function() {
+            selectedFile = null;
+            fileDataUrl = null;
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('postBtn').disabled = true;
+        };
+
+        window.updateCharCount = function() {
+            const text = document.getElementById('captionText').value;
+            document.getElementById('charCount').textContent = text.length;
+        };
+
+        window.uploadPost = async function() {
+            if (!selectedFile || !fileDataUrl) {
+                showError('Sila pilih fail terlebih dahulu');
+                return;
+            }
+
+            const caption = document.getElementById('captionText').value.trim();
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            loadingOverlay.style.display = 'flex';
+
+            try {
+                const post = {
+                    username: currentUser.username,
+                    profilePic: currentUser.profilePic || '',
+                    caption: caption,
+                    mediaType: selectedFile.type.startsWith('video/') ? 'video' : 'image',
+                    mediaData: fileDataUrl,
+                    likes: [],
+                    comments: [],
+                    timestamp: Date.now()
+                };
+
+                const postsRef = ref(db, 'posts');
+                await push(postsRef, post);
+
+                loadingOverlay.style.display = 'none';
+                showSuccess('Postingan berjaya dimuatnaik! 🎉');
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                loadingOverlay.style.display = 'none';
+                showError('Ralat semasa memuat naik: ' + error.message);
+            }
+        };
+
+        window.goBack = function() {
+            if (selectedFile) {
+                if (confirm('Anda mempunyai postingan yang belum disimpan. Adakah anda pasti mahu kembali?')) {
+                    window.location.href = 'index.html';
+                }
+            } else {
+                window.location.href = 'index.html';
+            }
+        };
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
